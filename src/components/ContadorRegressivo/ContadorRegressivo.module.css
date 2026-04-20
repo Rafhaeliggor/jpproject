@@ -1,0 +1,28 @@
+.contador {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.text {
+  font-family: var(--font-noto-sans-jp), 'Noto Sans JP', sans-serif;
+  font-size: clamp(1.5rem, 4vw, 3.25rem);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+@media (max-width: 1024px) {
+  .text {
+    font-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .text {
+    font-size: clamp(1rem, 6vw, 1.75rem);
+  }
+}
