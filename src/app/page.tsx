@@ -8,10 +8,7 @@ import Container from '@/components/Container/Container'
 import { Body } from '@/components/Typography/Typography'
 import RoteiroView from '@/views/RoteiroView/RoteiroView'
 import ComprasView from '@/views/ComprasView/ComprasView'
-<<<<<<< HEAD
 import OrcamentoView from '@/views/orcamentoView/orcamentoView'
-=======
->>>>>>> bd2c0d1c1f8f249e610d57b58cfce3dd83acd4d2
 import styles from './page.module.css'
 
 const TABS = ['ROTEIRO', 'PASSAGENS', 'HOSPEDAGEM', 'COMPRAS', 'ORÇAMENTO'] as const
@@ -57,13 +54,9 @@ export default function Home() {
           <RoteiroView />
         ) : activeTab === 'COMPRAS' ? (
           <ComprasView />
-<<<<<<< HEAD
         ) : activeTab === 'ORÇAMENTO' ? (
           <OrcamentoView />
         ) :(
-=======
-        ) : (
->>>>>>> bd2c0d1c1f8f249e610d57b58cfce3dd83acd4d2
           <Container>
             <section className={styles.placeholder}>
               <span className={styles.placeholderIcon}>
