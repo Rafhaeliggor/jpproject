@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import styles from './Tabs.module.css'
 
 export interface TabsProps {
@@ -8,6 +9,7 @@ export interface TabsProps {
   activeTab: string
   onTabChange: (tab: string) => void
   className?: string
+  tabLinks?: Record<string, string>
 }
 
 export default function Tabs({
@@ -15,6 +17,7 @@ export default function Tabs({
   activeTab,
   onTabChange,
   className,
+  tabLinks,
 }: TabsProps) {
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -31,18 +34,33 @@ export default function Tabs({
       <ul className={styles.list} role="tablist">
         {tabs.map((tab) => {
           const isActive = tab === activeTab
+          const href = tabLinks?.[tab]
           return (
             <li key={tab} role="presentation">
-              <button
-                role="tab"
-                aria-selected={isActive}
-                className={[styles.tab, isActive ? styles.active : '']
-                  .filter(Boolean)
-                  .join(' ')}
-                onClick={() => handleSelect(tab)}
-              >
-                {tab}
-              </button>
+              {href ? (
+                <Link
+                  href={href}
+                  role="tab"
+                  aria-selected={isActive}
+                  className={[styles.tab, isActive ? styles.active : '']
+                    .filter(Boolean)
+                    .join(' ')}
+                  onClick={() => handleSelect(tab)}
+                >
+                  {tab}
+                </Link>
+              ) : (
+                <button
+                  role="tab"
+                  aria-selected={isActive}
+                  className={[styles.tab, isActive ? styles.active : '']
+                    .filter(Boolean)
+                    .join(' ')}
+                  onClick={() => handleSelect(tab)}
+                >
+                  {tab}
+                </button>
+              )}
             </li>
           )
         })}
@@ -73,22 +91,41 @@ export default function Tabs({
           <ul className={styles.mobileList} role="listbox">
             {tabs.map((tab) => {
               const isActive = tab === activeTab
+              const href = tabLinks?.[tab]
               return (
                 <li key={tab} role="option" aria-selected={isActive}>
-                  <button
-                    className={[
-                      styles.mobileItem,
-                      isActive ? styles.mobileItemActive : '',
-                    ]
-                      .filter(Boolean)
-                      .join(' ')}
-                    onClick={() => handleSelect(tab)}
-                  >
-                    <span>{tab}</span>
-                    {isActive && (
-                      <i className="bi bi-check2" aria-hidden="true" />
-                    )}
-                  </button>
+                  {href ? (
+                    <Link
+                      href={href}
+                      className={[
+                        styles.mobileItem,
+                        isActive ? styles.mobileItemActive : '',
+                      ]
+                        .filter(Boolean)
+                        .join(' ')}
+                      onClick={() => handleSelect(tab)}
+                    >
+                      <span>{tab}</span>
+                      {isActive && (
+                        <i className="bi bi-check2" aria-hidden="true" />
+                      )}
+                    </Link>
+                  ) : (
+                    <button
+                      className={[
+                        styles.mobileItem,
+                        isActive ? styles.mobileItemActive : '',
+                      ]
+                        .filter(Boolean)
+                        .join(' ')}
+                      onClick={() => handleSelect(tab)}
+                    >
+                      <span>{tab}</span>
+                      {isActive && (
+                        <i className="bi bi-check2" aria-hidden="true" />
+                      )}
+                    </button>
+                  )}
                 </li>
               )
             })}
