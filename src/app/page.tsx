@@ -9,6 +9,7 @@ import { Body } from '@/components/Typography/Typography'
 import RoteiroView from '@/views/RoteiroView/RoteiroView'
 import ComprasView from '@/views/ComprasView/ComprasView'
 import OrcamentoView from '@/views/orcamentoView/orcamentoView'
+import PassagensView from '@/views/PassagensView/PassagensView'
 import styles from './page.module.css'
 
 const TABS = ['ROTEIRO', 'PASSAGENS', 'HOSPEDAGEM', 'COMPRAS', 'ORÇAMENTO'] as const
@@ -56,6 +57,8 @@ export default function Home() {
           <ComprasView />
         ) : activeTab === 'ORÇAMENTO' ? (
           <OrcamentoView />
+        ) : activeTab === 'PASSAGENS' ? (
+          <PassagensView />
         ) :(
           <Container>
             <section className={styles.placeholder}>
