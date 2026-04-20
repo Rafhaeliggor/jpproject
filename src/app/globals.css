@@ -1,0 +1,104 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-bg: #0b1622;
+  --color-header: #6f1c1c;
+  --color-surface: #151f2e;
+  --color-surface-alt: #262626;
+  --color-accent: #8c2323;
+  --color-tab-active: #cdcdcd;
+  --color-tab-inactive: #a0adbd;
+  --color-white: #ffffff;
+  --color-text-primary: #cdcdcd;
+  --color-text-secondary: #a0adbd;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  --radius-lg: 8px;
+  --radius-md: 6px;
+  --radius-sm: 4px;
+
+  --text-h1: 32px;
+  --text-h2: 24px;
+  --text-h3: 20px;
+  --text-h4: 18px;
+  --text-body: 16px;
+  --text-label: 14px;
+  --text-caption: 12px;
+
+  --grid-gutter: 16px;
+  --margin-mobile: 16px;
+  --margin-tablet: 24px;
+  --margin-desktop: 32px;
+  --max-width: 1280px;
+}
+
+html,
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-inter), 'Inter', sans-serif;
+  font-size: var(--text-body);
+  line-height: 1.5;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+.leaflet-container {
+  background: var(--color-surface-alt) !important;
+  font-family: var(--font-inter), 'Inter', sans-serif !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: var(--color-surface) !important;
+  color: var(--color-text-primary) !important;
+  border-radius: var(--radius-md) !important;
+  border: 1px solid rgba(160, 173, 189, 0.15) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
+}
+
+.leaflet-popup-tip {
+  background: var(--color-surface) !important;
+}
+
+.leaflet-control-zoom a {
+  background: var(--color-surface) !important;
+  color: var(--color-text-primary) !important;
+  border-color: rgba(160, 173, 189, 0.2) !important;
+}

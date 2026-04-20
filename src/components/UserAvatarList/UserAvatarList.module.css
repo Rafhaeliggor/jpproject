@@ -1,0 +1,29 @@
+.list {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-inter), 'Inter', sans-serif;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0;
+}
+
+.avatarImg {
+  object-fit: cover;
+}
+
+.extra {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}

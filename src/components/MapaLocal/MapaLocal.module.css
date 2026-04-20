@@ -1,0 +1,11 @@
+.wrapper {
+  width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid rgba(160, 173, 189, 0.12);
+}
+
+.map {
+  height: 220px;
+  width: 100%;
+}
