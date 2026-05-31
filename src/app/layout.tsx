@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Noto_Sans_JP, Open_Sans, Lexend, Source_Sans_3 } from 'next/font/google'
 import VLibrasWidget from '@/components/VLibrasWidget/VLibrasWidget'
+import KeyboardNavManager from '@/components/KeyboardNavManager/KeyboardNavManager'
 import './globals.css'
 
 const inter = Inter({
@@ -61,6 +62,7 @@ export default function RootLayout({
       <body>
         {children}
         <VLibrasWidget />
+        <KeyboardNavManager />
       </body>
     </html>
   )
