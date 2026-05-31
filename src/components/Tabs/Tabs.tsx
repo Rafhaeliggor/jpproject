@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import styles from './Tabs.module.css'
 
@@ -20,7 +20,6 @@ export default function Tabs({
   tabLinks,
 }: TabsProps) {
   const [menuOpen, setMenuOpen] = useState(false)
-  const listRef = useRef<HTMLUListElement>(null)
 
   const handleSelect = (tab: string) => {
     onTabChange(tab)
@@ -32,25 +31,7 @@ export default function Tabs({
       className={[styles.nav, className].filter(Boolean).join(' ')}
       aria-label="Navegação por seções"
     >
-      <ul
-        className={styles.list}
-        role="tablist"
-        ref={listRef}
-        onKeyDown={(e) => {
-          if (document.documentElement.getAttribute('data-keyboard-nav') === 'false') return
-          if (!['ArrowLeft', 'ArrowRight'].includes(e.key)) return
-          const items = listRef.current?.querySelectorAll<HTMLElement>('[role="tab"]')
-          if (!items?.length) return
-          const currentIdx = Array.from(items).findIndex((el) => el === document.activeElement)
-          if (currentIdx === -1) return
-          const nextIdx =
-            e.key === 'ArrowRight'
-              ? (currentIdx + 1) % items.length
-              : (currentIdx - 1 + items.length) % items.length
-          items[nextIdx].focus()
-          e.preventDefault()
-        }}
-      >
+      <ul className={styles.list} role="tablist">
         {tabs.map((tab) => {
           const isActive = tab === activeTab
           const href = tabLinks?.[tab]
