@@ -249,6 +249,84 @@
   color: var(--color-text-secondary);
 }
 
+/* ── Linha de toggle ── */
+.toggleRow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
+}
+
+.toggleInfo {
+  flex: 1;
+}
+
+.toggleLabel {
+  font-size: var(--text-body);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.toggleDesc {
+  font-size: var(--text-caption);
+  color: var(--color-text-secondary);
+  line-height: 1.45;
+}
+
+/* ── Switch ── */
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.toggleInput {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggleTrack {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: rgba(160, 173, 189, 0.18);
+  border: 1px solid rgba(160, 173, 189, 0.15);
+  transition: background 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+
+.toggleTrack::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-text-secondary);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.toggleInput:checked + .toggleTrack {
+  background: rgba(140, 35, 35, 0.45);
+  border-color: var(--color-accent);
+}
+
+.toggleInput:checked + .toggleTrack::after {
+  transform: translateX(20px);
+  background: var(--color-accent);
+}
+
+.toggleInput:focus-visible + .toggleTrack {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 @media (max-width: 560px) {
   .modal {
     max-height: 95vh;

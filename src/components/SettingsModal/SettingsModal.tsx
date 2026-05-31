@@ -8,7 +8,7 @@ interface SettingsModalProps {
   onClose: () => void
 }
 
-type SidebarSection = 'aparencia'
+type SidebarSection = 'aparencia' | 'acessibilidade'
 
 type FontValue = 'inter' | 'opensans' | 'lexend' | 'sourcesans'
 type ContrastValue = 'normal' | 'high'
@@ -24,13 +24,16 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [activeSection, setActiveSection] = useState<SidebarSection>('aparencia')
   const [selectedFont, setSelectedFont] = useState<FontValue>('inter')
   const [contrast, setContrast] = useState<ContrastValue>('normal')
+  const [vlibrasEnabled, setVlibrasEnabled] = useState(false)
 
   useEffect(() => {
     if (!isOpen) return
     const savedFont = localStorage.getItem('settings-font') as FontValue | null
     const savedContrast = localStorage.getItem('settings-contrast') as ContrastValue | null
+    const savedVlibras = localStorage.getItem('settings-vlibras')
     if (savedFont) setSelectedFont(savedFont)
     if (savedContrast) setContrast(savedContrast)
+    setVlibrasEnabled(savedVlibras === 'true')
   }, [isOpen])
 
   useEffect(() => {
@@ -39,6 +42,13 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     localStorage.setItem('settings-font', selectedFont)
     localStorage.setItem('settings-contrast', contrast)
   }, [selectedFont, contrast])
+
+  useEffect(() => {
+    localStorage.setItem('settings-vlibras', vlibrasEnabled ? 'true' : 'false')
+    window.dispatchEvent(
+      new CustomEvent('vlibras-settings-change', { detail: { enabled: vlibrasEnabled } })
+    )
+  }, [vlibrasEnabled])
 
   useEffect(() => {
     if (isOpen) {
@@ -86,9 +96,44 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <i className="bi bi-palette" aria-hidden="true" />
               <span>Aparência</span>
             </button>
+            <button
+              className={`${styles.sidebarItem} ${activeSection === 'acessibilidade' ? styles.sidebarItemActive : ''}`}
+              onClick={() => setActiveSection('acessibilidade')}
+            >
+              <i className="bi bi-universal-access" aria-hidden="true" />
+              <span>Acessibilidade</span>
+            </button>
           </aside>
 
           <div className={styles.content}>
+            {activeSection === 'acessibilidade' && (
+              <section className={styles.section}>
+                <h3 className={styles.sectionTitle}>Libras (VLibras)</h3>
+                <p className={styles.sectionDesc}>
+                  Quando ativado, um intérprete de Libras aparece no canto inferior direito
+                  e sinaliza automaticamente o conteúdo sempre que um som for reproduzido na plataforma.
+                </p>
+
+                <div className={styles.toggleRow}>
+                  <div className={styles.toggleInfo}>
+                    <p className={styles.toggleLabel}>Intérprete de Libras</p>
+                    <p className={styles.toggleDesc}>
+                      Exibe o boneco VLibras e aciona a sinalização junto a cada áudio da plataforma.
+                    </p>
+                  </div>
+                  <label className={styles.toggle} aria-label="Ativar intérprete de Libras">
+                    <input
+                      type="checkbox"
+                      className={styles.toggleInput}
+                      checked={vlibrasEnabled}
+                      onChange={(e) => setVlibrasEnabled(e.target.checked)}
+                    />
+                    <span className={styles.toggleTrack} />
+                  </label>
+                </div>
+              </section>
+            )}
+
             {activeSection === 'aparencia' && (
               <>
                 <section className={styles.section}>
