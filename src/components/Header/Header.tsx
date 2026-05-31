@@ -21,8 +21,10 @@ export default function Header({
   useEffect(() => {
     const savedFont = localStorage.getItem('settings-font')
     const savedContrast = localStorage.getItem('settings-contrast')
+    const savedA11yContrast = localStorage.getItem('settings-a11y-contrast')
     if (savedFont) document.documentElement.setAttribute('data-font', savedFont)
     if (savedContrast) document.documentElement.setAttribute('data-contrast', savedContrast)
+    document.documentElement.setAttribute('data-a11y-contrast', savedA11yContrast === 'true' ? 'true' : 'false')
   }, [])
 
   useEffect(() => {

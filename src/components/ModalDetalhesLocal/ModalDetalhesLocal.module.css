@@ -204,8 +204,8 @@
 }
 
 .tagExtra {
-  background-color: rgba(140, 35, 35, 0.15);
-  color: #c97a7a;
+  background-color: var(--color-accent-subtle);
+  color: var(--color-accent-text);
 }
 
 

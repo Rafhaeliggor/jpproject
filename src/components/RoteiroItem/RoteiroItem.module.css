@@ -89,8 +89,8 @@
 }
 
 .tagExtra {
-  background-color: rgba(140, 35, 35, 0.15);
-  color: #c97a7a;
+  background-color: var(--color-accent-subtle);
+  color: var(--color-accent-text);
 }
 
 .removeBtn {
@@ -114,8 +114,8 @@
 }
 
 .removeBtn:hover {
-  background-color: rgba(140, 35, 35, 0.2);
-  color: #c97a7a;
+  background-color: var(--color-accent-medium);
+  color: var(--color-accent-text);
 }
 
 .removeBtn i {
