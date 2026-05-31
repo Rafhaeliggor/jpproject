@@ -44,13 +44,34 @@
   --margin-tablet: 24px;
   --margin-desktop: 32px;
   --max-width: 1280px;
+
+  --font-selected: var(--font-inter), 'Inter', sans-serif;
+}
+
+[data-font="opensans"] {
+  --font-selected: var(--font-open-sans), 'Open Sans', sans-serif;
+}
+
+[data-font="lexend"] {
+  --font-selected: var(--font-lexend), 'Lexend', sans-serif;
+}
+
+[data-font="sourcesans"] {
+  --font-selected: var(--font-source-sans), 'Source Sans 3', sans-serif;
+}
+
+[data-contrast="high"] {
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #d4dce8;
+  --color-tab-active: #ffffff;
+  --color-tab-inactive: #c5d0de;
 }
 
 html,
 body {
   background-color: var(--color-bg);
   color: var(--color-text-primary);
-  font-family: var(--font-inter), 'Inter', sans-serif;
+  font-family: var(--font-selected);
   font-size: var(--text-body);
   line-height: 1.5;
   min-height: 100dvh;
@@ -82,7 +103,7 @@ ol {
 
 .leaflet-container {
   background: var(--color-surface-alt) !important;
-  font-family: var(--font-inter), 'Inter', sans-serif !important;
+  font-family: var(--font-selected) !important;
 }
 
 .leaflet-popup-content-wrapper {

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Noto_Sans_JP } from 'next/font/google'
+import { Inter, Noto_Sans_JP, Open_Sans, Lexend, Source_Sans_3 } from 'next/font/google'
 import './globals.css'
 
 const inter = Inter({
@@ -11,6 +11,27 @@ const inter = Inter({
 const notoSansJP = Noto_Sans_JP({
   subsets: ['latin'],
   variable: '--font-noto-sans-jp',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+})
+
+const openSans = Open_Sans({
+  subsets: ['latin'],
+  variable: '--font-open-sans',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+})
+
+const lexend = Lexend({
+  subsets: ['latin'],
+  variable: '--font-lexend',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+})
+
+const sourceSans3 = Source_Sans_3({
+  subsets: ['latin'],
+  variable: '--font-source-sans',
   weight: ['400', '500', '600', '700'],
   display: 'swap',
 })
@@ -28,7 +49,7 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${inter.variable} ${notoSansJP.variable}`}
+      className={`${inter.variable} ${notoSansJP.variable} ${openSans.variable} ${lexend.variable} ${sourceSans3.variable}`}
     >
       <head>
         <link
