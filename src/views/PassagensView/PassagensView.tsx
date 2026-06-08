@@ -1,228 +1,66 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import Container from '@/components/Container/Container'
 import SearchBar from '@/components/SearchBar/SearchBar'
-import { USUARIOS } from '@/data/usuarios'
+import { api, type Flight, type FlightConnection } from '@/lib/api'
 import styles from './PassagensView.module.css'
 
-type Passagem = {
-  id: number
-  companhia: string
-  categoria: string
-  aeroporto: string
-  saida: string
-  volta: string
-  conexoes: number
-  tempo: string
-  preco: string
-  cor: string
-  logoUrl: string
-  conexoesDetalhes: {
-    titulo: string
-    local: string
-    chegada: string
-    saida: string
-  }[]
+function formatPrice(price: number, currency: string) {
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: currency || 'BRL' }).format(price)
 }
 
-const PASSAGENS: Passagem[] = [
-  {
-    id: 1,
-    companhia: 'TAP Air Portugal',
-    categoria: 'Executiva',
-    aeroporto: 'Aeroporto Internacional de Guarulhos',
-    saida: '12/08/2026',
-    volta: '29/08/2026',
-    conexoes: 3,
-    tempo: '33h',
-    preco: '$15.000,00',
-    cor: '#8EDCFA',
-    logoUrl:
-      'https://play-lh.googleusercontent.com/npqgU0wsILV7afp3ss0Jk82xiOLGNUo6X568jDaZJN9ptreNOuu6_8IoQ7BwW9Ykyw',
-    conexoesDetalhes: [
-      {
-        titulo: 'Conexão 1',
-        local: 'Barcelona',
-        chegada: '13/08/2026 - 08:30',
-        saida: '13/08/2026 - 11:10',
-      },
-      {
-        titulo: 'Conexão 2',
-        local: 'Doha',
-        chegada: '13/08/2026 - 14:00',
-        saida: '13/08/2026 - 17:20',
-      },
-      {
-        titulo: 'Conexão 3',
-        local: 'Osaka',
-        chegada: '13/08/2026 - 14:00',
-        saida: '13/08/2026 - 17:20',
-      },
-    ],
-  },
-  {
-    id: 2,
-    companhia: 'LATAN Airlines',
-    categoria: 'Premium',
-    aeroporto: 'Aeroporto Internacional de Viracopos',
-    saida: '13/08/2026',
-    volta: '28/08/2026',
-    conexoes: 3,
-    tempo: '31h',
-    preco: '$22.500,00',
-    cor: '#9CF2A4',
-    logoUrl:
-      'https://passageirodeprimeira.com/wp-content/uploads/2015/08/LATAM-LOGO-FONDO-INDIGO.jpg',
-    conexoesDetalhes: [
-      {
-        titulo: 'Conexão 1',
-        local: 'Paris',
-        chegada: '14/08/2026 - 06:15',
-        saida: '14/08/2026 - 08:10',
-      },
-      {
-        titulo: 'Conexão 2',
-        local: 'Frankfurt',
-        chegada: '14/08/2026 - 10:40',
-        saida: '14/08/2026 - 12:20',
-      },
-      {
-        titulo: 'Conexão 3',
-        local: 'Tóquio',
-        chegada: '15/08/2026 - 05:45',
-        saida: '15/08/2026 - 07:00',
-      },
-    ],
-  },
-  {
-    id: 3,
-    companhia: 'Emirates Airlines',
-    categoria: 'Econômica',
-    aeroporto: 'Aeroporto Internacional do Recife',
-    saida: '10/08/2026',
-    volta: '27/08/2026',
-    conexoes: 3,
-    tempo: '35h',
-    preco: '$12.000,00',
-    cor: '#d9d9d9',
-    logoUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Emirates_banner_logo.svg/3840px-Emirates_banner_logo.svg.png',
-    conexoesDetalhes: [
-      {
-        titulo: 'Conexão 1',
-        local: 'Lisboa',
-        chegada: '11/08/2026 - 05:10',
-        saida: '11/08/2026 - 07:00',
-      },
-      {
-        titulo: 'Conexão 2',
-        local: 'Dubai',
-        chegada: '11/08/2026 - 16:30',
-        saida: '11/08/2026 - 18:10',
-      },
-      {
-        titulo: 'Conexão 3',
-        local: 'Seul',
-        chegada: '12/08/2026 - 08:00',
-        saida: '12/08/2026 - 09:30',
-      },
-    ],
-  },
-  {
-    id: 4,
-    companhia: 'Qatar Airways',
-    categoria: 'Economica',
-    aeroporto: 'Aeroporto de Maceió',
-    saida: '11/08/2026',
-    volta: '30/08/2026',
-    conexoes: 3,
-    tempo: '32h',
-    preco: '$18.000,00',
-    cor: '#f1e78a',
-    logoUrl:
-      'https://d21buns5ku92am.cloudfront.net/69647/images/634084-QR-Logo-Full-Colour-Horizontal-bd9477-medium-1765966477.jpg',
-    conexoesDetalhes: [
-      {
-        titulo: 'Conexão 1',
-        local: 'São Paulo',
-        chegada: '11/08/2026 - 09:40',
-        saida: '11/08/2026 - 11:20',
-      },
-      {
-        titulo: 'Conexão 2',
-        local: 'Doha',
-        chegada: '12/08/2026 - 02:00',
-        saida: '12/08/2026 - 05:00',
-      },
-      {
-        titulo: 'Conexão 3',
-        local: 'Nagoya',
-        chegada: '12/08/2026 - 18:10',
-        saida: '12/08/2026 - 20:10',
-      },
-    ],
-  },
-]
-
-function ModalPassagem({
-  passagem,
-  onClose,
-}: {
-  passagem: Passagem
-  onClose: () => void
-}) {
+// ─── Modal Detalhes ───────────────────────────────────────────────────────────
+function ModalPassagem({ flight, onClose }: { flight: Flight; onClose: () => void }) {
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div
         className={styles.modalCard}
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
       >
-        <button
-          type="button"
-          className={styles.modalClose}
-          onClick={onClose}
-          aria-label="Fechar"
-        >
+        <button type="button" className={styles.modalClose} onClick={onClose} aria-label="Fechar">
           ×
         </button>
 
-          <div className={styles.modalHeader}>
-    <div className={styles.modalBrand}>
-      <img
-        src={passagem.logoUrl}
-        alt={passagem.companhia}
-        className={styles.modalLogo}
-      />
-      <div>
-        <h3 className={styles.modalTitle}>
-          {passagem.companhia}{' '}
-          <span className={styles.modalCategory}>
-            ({passagem.categoria})
-          </span>
-        </h3>
-        <p className={styles.modalAirport}>{passagem.aeroporto}</p>
-      </div>
-    </div>
+        <div className={styles.modalHeader}>
+          <div className={styles.modalBrand}>
+            {flight.logo_url ? (
+              <img
+                src={flight.logo_url}
+                alt={flight.airline}
+                className={styles.modalLogo}
+                onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+              />
+            ) : (
+              <span className={styles.airlineLogoFallback} style={{ backgroundColor: flight.color, width: 42, height: 42, fontSize: '1rem' }}>
+                {flight.airline.charAt(0)}
+              </span>
+            )}
+            <div>
+              <h3 className={styles.modalTitle}>
+                {flight.airline}{' '}
+                <span className={styles.modalCategory}>({flight.category})</span>
+              </h3>
+              <p className={styles.modalAirport}>{flight.airport}</p>
+            </div>
+          </div>
+          <div className={styles.modalPrice}>{formatPrice(flight.price, flight.currency)}</div>
+        </div>
 
-    <div className={styles.modalPrice}>{passagem.preco}</div>
-  </div>
-
-  <div className={styles.modalTopInfo}>
-    <div>
-      <div className={styles.modalSectionTitle}>Ida</div>
-      <p>Partida: {passagem.saida}</p>
-      <p>Chegada: —</p>
-    </div>
-
-    <div>
-      <div className={styles.modalSectionTitle}>Volta</div>
-      <p>Partida: {passagem.volta}</p>
-      <p>Chegada: —</p>
-    </div>
-  </div>
+        <div className={styles.modalTopInfo}>
+          <div>
+            <div className={styles.modalSectionTitle}>Ida</div>
+            <p>Partida: {flight.departure_date}</p>
+            <p>Chegada: —</p>
+          </div>
+          <div>
+            <div className={styles.modalSectionTitle}>Volta</div>
+            <p>Partida: {flight.return_date}</p>
+            <p>Chegada: —</p>
+          </div>
+        </div>
 
         <div className={styles.modalContent}>
           <div className={styles.timelineWrap}>
@@ -232,41 +70,32 @@ function ModalPassagem({
                 <span className={styles.stopDot} />
                 <span>Brasil</span>
               </div>
-              <div className={styles.stopItem}>
-                <span className={styles.stopDot} />
-                <span>Conexão 1</span>
-              </div>
-              <div className={styles.stopItem}>
-                <span className={styles.stopDot} />
-                <span>Conexão 2</span>
-              </div>
-              <div className={styles.stopItem}>
-                <span className={styles.stopDot} />
-                <span>Conexão 3</span>
-              </div>
+              {(flight.connections ?? []).map(c => (
+                <div key={c.id} className={styles.stopItem}>
+                  <span className={styles.stopDot} />
+                  <span>{c.title}</span>
+                </div>
+              ))}
               <div className={styles.stopItem}>
                 <span className={styles.stopDot} />
                 <span>Japão</span>
               </div>
             </div>
-
             <button type="button" className={styles.editButton}>
               Editar
             </button>
           </div>
 
           <div className={styles.connectionsPanel}>
-            {passagem.conexoesDetalhes.map((conexao) => (
-              <div key={conexao.titulo} className={styles.connectionBox}>
+            {(flight.connections ?? []).map(c => (
+              <div key={c.id} className={styles.connectionBox}>
                 <div className={styles.connectionHeader}>
-                  <span>{conexao.titulo}</span>
-                  <span className={styles.connectionPlace}>
-                    {conexao.local} da conexão
-                  </span>
+                  <span>{c.title}</span>
+                  <span className={styles.connectionPlace}>{c.location} da conexão</span>
                 </div>
                 <div className={styles.connectionLines}>
-                  <p>Chegada&nbsp;&nbsp; {conexao.chegada}</p>
-                  <p>Saída&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {conexao.saida}</p>
+                  <p>Chegada&nbsp;&nbsp; {c.arrival_time}</p>
+                  <p>Saída&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {c.departure_time}</p>
                 </div>
               </div>
             ))}
@@ -277,137 +106,459 @@ function ModalPassagem({
   )
 }
 
+// ─── Modal Adicionar ──────────────────────────────────────────────────────────
+interface ConnectionForm {
+  title: string
+  location: string
+  arrival_time: string
+  departure_time: string
+}
+
+interface FlightForm {
+  airline: string
+  category: string
+  airport: string
+  departure_date: string
+  return_date: string
+  price: string
+  currency: string
+  travel_duration: string
+  logo_url: string
+  color: string
+  connections: ConnectionForm[]
+}
+
+const EMPTY_FORM: FlightForm = {
+  airline: '',
+  category: 'Econômica',
+  airport: '',
+  departure_date: '',
+  return_date: '',
+  price: '',
+  currency: 'BRL',
+  travel_duration: '',
+  logo_url: '',
+  color: '#6366f1',
+  connections: [],
+}
+
+function ModalAdicionarVoo({ onClose, onSaved }: { onClose: () => void; onSaved: () => void }) {
+  const [form, setForm] = useState<FlightForm>(EMPTY_FORM)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+
+  function set(field: keyof Omit<FlightForm, 'connections'>, value: string) {
+    setForm(prev => ({ ...prev, [field]: value }))
+  }
+
+  function addConn() {
+    setForm(prev => ({
+      ...prev,
+      connections: [
+        ...prev.connections,
+        { title: `Conexão ${prev.connections.length + 1}`, location: '', arrival_time: '', departure_time: '' },
+      ],
+    }))
+  }
+
+  function updateConn(i: number, field: keyof ConnectionForm, value: string) {
+    setForm(prev => {
+      const conns = [...prev.connections]
+      conns[i] = { ...conns[i], [field]: value }
+      return { ...prev, connections: conns }
+    })
+  }
+
+  function removeConn(i: number) {
+    setForm(prev => ({ ...prev, connections: prev.connections.filter((_, idx) => idx !== i) }))
+  }
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!form.airline.trim()) { setError('Companhia é obrigatória.'); return }
+    setSaving(true)
+    setError('')
+    try {
+      await api.flights.create({
+        airline: form.airline.trim(),
+        category: form.category,
+        airport: form.airport.trim(),
+        departure_date: form.departure_date,
+        return_date: form.return_date,
+        price: Number(form.price) || 0,
+        currency: form.currency,
+        travel_duration: form.travel_duration.trim(),
+        logo_url: form.logo_url.trim(),
+        color: form.color,
+        connection_count: form.connections.length,
+        connections: form.connections.map((c, idx): FlightConnection => ({
+          id: 0,
+          flight_id: 0,
+          order_index: idx + 1,
+          title: c.title,
+          location: c.location,
+          arrival_time: c.arrival_time,
+          departure_time: c.departure_time,
+        })),
+      })
+      onSaved()
+      onClose()
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Erro ao salvar voo.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div className={styles.modalOverlay} onClick={onClose}>
+      <div
+        className={styles.modalCard}
+        onClick={e => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Adicionar passagem"
+      >
+        <button type="button" className={styles.modalClose} onClick={onClose} aria-label="Fechar">×</button>
+        <h3 className={styles.modalAddTitle}>Adicionar Passagem</h3>
+
+        <form onSubmit={submit} className={styles.form}>
+          {error && <p className={styles.formError}>{error}</p>}
+
+          <div className={styles.formGrid}>
+            <label className={styles.formField}>
+              <span>Companhia *</span>
+              <input
+                type="text"
+                value={form.airline}
+                onChange={e => set('airline', e.target.value)}
+                placeholder="Ex: LATAM Airlines"
+              />
+            </label>
+            <label className={styles.formField}>
+              <span>Categoria</span>
+              <select value={form.category} onChange={e => set('category', e.target.value)}>
+                <option>Econômica</option>
+                <option>Premium</option>
+                <option>Executiva</option>
+              </select>
+            </label>
+            <label className={`${styles.formField} ${styles.formFieldFull}`}>
+              <span>Aeroporto de Partida</span>
+              <input
+                type="text"
+                value={form.airport}
+                onChange={e => set('airport', e.target.value)}
+                placeholder="Ex: Aeroporto GRU (São Paulo)"
+              />
+            </label>
+            <label className={styles.formField}>
+              <span>Data de Ida</span>
+              <input type="date" value={form.departure_date} onChange={e => set('departure_date', e.target.value)} />
+            </label>
+            <label className={styles.formField}>
+              <span>Data de Volta</span>
+              <input type="date" value={form.return_date} onChange={e => set('return_date', e.target.value)} />
+            </label>
+            <label className={styles.formField}>
+              <span>Preço</span>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={form.price}
+                onChange={e => set('price', e.target.value)}
+                placeholder="0"
+              />
+            </label>
+            <label className={styles.formField}>
+              <span>Moeda</span>
+              <select value={form.currency} onChange={e => set('currency', e.target.value)}>
+                <option>BRL</option>
+                <option>USD</option>
+                <option>EUR</option>
+                <option>JPY</option>
+              </select>
+            </label>
+            <label className={styles.formField}>
+              <span>Tempo de Viagem</span>
+              <input
+                type="text"
+                value={form.travel_duration}
+                onChange={e => set('travel_duration', e.target.value)}
+                placeholder="Ex: 26h00"
+              />
+            </label>
+            <label className={styles.formField}>
+              <span>Cor da Companhia</span>
+              <input
+                type="color"
+                value={form.color}
+                onChange={e => set('color', e.target.value)}
+                className={styles.colorInput}
+              />
+            </label>
+            <label className={`${styles.formField} ${styles.formFieldFull}`}>
+              <span>Logo URL <span className={styles.optional}>(opcional)</span></span>
+              <input
+                type="url"
+                value={form.logo_url}
+                onChange={e => set('logo_url', e.target.value)}
+                placeholder="https://..."
+              />
+            </label>
+          </div>
+
+          <div className={styles.connSection}>
+            <div className={styles.connSectionHead}>
+              <span>Conexões</span>
+              <button type="button" className={styles.addConnBtn} onClick={addConn}>
+                <i className="bi bi-plus" aria-hidden="true" /> Adicionar
+              </button>
+            </div>
+            {form.connections.map((c, i) => (
+              <div key={i} className={styles.connRow}>
+                <input
+                  className={styles.connInput}
+                  placeholder="Título"
+                  value={c.title}
+                  onChange={e => updateConn(i, 'title', e.target.value)}
+                />
+                <input
+                  className={`${styles.connInput} ${styles.connInputWide}`}
+                  placeholder="Local (ex: Lisboa, PT - LIS)"
+                  value={c.location}
+                  onChange={e => updateConn(i, 'location', e.target.value)}
+                />
+                <input
+                  className={styles.connInput}
+                  placeholder="Chegada"
+                  value={c.arrival_time}
+                  onChange={e => updateConn(i, 'arrival_time', e.target.value)}
+                />
+                <input
+                  className={styles.connInput}
+                  placeholder="Saída"
+                  value={c.departure_time}
+                  onChange={e => updateConn(i, 'departure_time', e.target.value)}
+                />
+                <button
+                  type="button"
+                  className={styles.removeConnBtn}
+                  onClick={() => removeConn(i)}
+                  aria-label="Remover conexão"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className={styles.formActions}>
+            <button type="button" className={styles.cancelBtn} onClick={onClose}>Cancelar</button>
+            <button type="submit" className={styles.submitBtn} disabled={saving}>
+              {saving ? 'Salvando…' : 'Salvar Voo'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+// ─── Main View ────────────────────────────────────────────────────────────────
 export default function PassagensView() {
   const [query, setQuery] = useState('')
-  const [selecionada, setSelecionada] = useState<Passagem | null>(PASSAGENS[0])
-  const [modalPassagem, setModalPassagem] = useState<Passagem | null>(null)
+  const [flights, setFlights] = useState<Flight[]>([])
+  const [selecionada, setSelecionada] = useState<Flight | null>(null)
+  const [modalPassagem, setModalPassagem] = useState<Flight | null>(null)
+  const [modalAdicionar, setModalAdicionar] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    api.flights.list()
+      .then(data => {
+        setFlights(data)
+        if (data.length > 0) setSelecionada(data[0])
+      })
+      .catch(() => setError('Erro ao carregar passagens.'))
+      .finally(() => setLoading(false))
+  }, [])
+
+  function refreshFlights() {
+    api.flights.list()
+      .then(data => setFlights(data))
+      .catch(() => setError('Erro ao atualizar passagens.'))
+  }
+
+  const removerVoo = async (id: number) => {
+    try {
+      await api.flights.delete(id)
+      setFlights(prev => prev.filter(f => f.id !== id))
+      if (selecionada?.id === id) setSelecionada(null)
+      if (modalPassagem?.id === id) setModalPassagem(null)
+    } catch {
+      setError('Não foi possível remover o voo.')
+    }
+  }
 
   const resultados = useMemo(() => {
     const q = query.trim().toLowerCase()
-    if (!q) return PASSAGENS
-
-    return PASSAGENS.filter(
-      (item) =>
-        item.companhia.toLowerCase().includes(q) ||
-        item.aeroporto.toLowerCase().includes(q) ||
-        item.categoria.toLowerCase().includes(q),
+    if (!q) return flights
+    return flights.filter(
+      f =>
+        f.airline.toLowerCase().includes(q) ||
+        f.airport.toLowerCase().includes(q) ||
+        f.category.toLowerCase().includes(q),
     )
-  }, [query])
+  }, [query, flights])
+
+  if (loading) {
+    return (
+      <div className={styles.wrapper}>
+        <Container>
+          <p style={{ padding: '2rem', color: '#6b7280' }}>Carregando passagens...</p>
+        </Container>
+      </div>
+    )
+  }
 
   return (
     <div className={styles.wrapper}>
+      {error && (
+        <div style={{ background: '#fef2f2', color: '#dc2626', padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
+          {error}
+        </div>
+      )}
+
       <Container>
         <div className={styles.grid}>
           <section className={styles.colLeft}>
-            <div className={styles.searchWrap}>
-              <SearchBar
-                placeholder="Pesquisa"
-                value={query}
-                onChange={setQuery}
-              />
+            <div className={styles.topBar}>
+              <div className={styles.searchWrap}>
+                <SearchBar placeholder="Pesquisa" value={query} onChange={setQuery} />
+              </div>
+              <button
+                type="button"
+                className={styles.addBtn}
+                onClick={() => setModalAdicionar(true)}
+              >
+                <i className="bi bi-plus-lg" aria-hidden="true" /> Adicionar
+              </button>
             </div>
 
             <div className={styles.leftList}>
-              {resultados.map((item, index) => {
-                const usuario = USUARIOS[index % USUARIOS.length]
-
-                return (
+              {flights.length === 0 && (
+                <div className={styles.emptyState}>
+                  <i className="bi bi-airplane" aria-hidden="true" />
+                  <p>Nenhuma passagem cadastrada.</p>
                   <button
-                    key={item.id}
                     type="button"
-                    className={`${styles.flightRow} ${
-                      selecionada?.id === item.id ? styles.flightRowActive : ''
-                    }`}
+                    className={styles.emptyBtn}
+                    onClick={() => setModalAdicionar(true)}
+                  >
+                    + Adicionar primeira passagem
+                  </button>
+                </div>
+              )}
+              {flights.length > 0 && resultados.length === 0 && (
+                <div className={styles.emptyState}>
+                  <i className="bi bi-search" aria-hidden="true" />
+                  <p>Nenhuma passagem encontrada para &ldquo;{query}&rdquo;.</p>
+                </div>
+              )}
+              {resultados.map(item => (
+                <div key={item.id} className={styles.flightRowWrap}>
+                  <button
+                    type="button"
+                    className={`${styles.flightRow} ${selecionada?.id === item.id ? styles.flightRowActive : ''}`}
                     onClick={() => setSelecionada(item)}
                   >
-                    <div className={styles.userAvatarWrap}>
-                      <img
-                        src={usuario.avatarUrl}
-                        alt={usuario.nome}
-                        className={styles.userAvatar}
-                      />
-                      <span
-                        className={styles.userAvatarGhost}
-                        style={{ backgroundColor: usuario.cor }}
-                      />
-                    </div>
-
                     <div className={styles.flightMain}>
                       <div className={styles.flightTop}>
                         <div>
-                          <strong className={styles.companyName}>
-                            {item.companhia}
-                          </strong>
-                          <p className={styles.airportText}>{item.aeroporto}</p>
+                          <strong className={styles.companyName}>{item.airline}</strong>
+                          <p className={styles.airportText}>{item.airport}</p>
                         </div>
 
                         <div className={styles.flightMetaGrid}>
-                          <span>{item.saida}</span>
-                          <span>{item.volta}</span>
+                          <span>{item.departure_date}</span>
+                          <span>{item.return_date}</span>
                           <span className={styles.metaDanger}>
-                            Conexões: {item.conexoes}
+                            Conexões: {item.connection_count}
                           </span>
                           <span className={styles.metaDanger}>
-                            Tempo de viagem: {item.tempo}
+                            Tempo de viagem: {item.travel_duration}
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    <div className={styles.priceSmall}>{item.preco}</div>
+                    <div className={styles.priceSmall}>{formatPrice(item.price, item.currency)}</div>
                   </button>
-                )
-              })}
+                  <button
+                    type="button"
+                    className={styles.deleteBtn}
+                    onClick={() => removerVoo(item.id)}
+                    aria-label={`Remover ${item.airline}`}
+                  >
+                    <i className="bi bi-trash3" aria-hidden="true" />
+                  </button>
+                </div>
+              ))}
             </div>
           </section>
 
           <aside className={styles.colRight}>
             <div className={styles.detailList}>
-              {resultados.slice(0, 4).map((item) => (
+              {resultados.slice(0, 4).map(item => (
                 <button
                   key={item.id}
                   type="button"
-                  className={`${styles.detailCard} ${
-                    selecionada?.id === item.id ? styles.detailCardActive : ''
-                  }`}
+                  className={`${styles.detailCard} ${selecionada?.id === item.id ? styles.detailCardActive : ''}`}
                   onClick={() => setModalPassagem(item)}
                 >
                   <div className={styles.detailInfo}>
                     <div className={styles.detailHeader}>
                       <div className={styles.detailBrand}>
-                        <img
-                          src={item.logoUrl}
-                          alt={item.companhia}
-                          className={styles.airlineLogo}
-                        />
-
+                        {item.logo_url ? (
+                          <img
+                            src={item.logo_url}
+                            alt={item.airline}
+                            className={styles.airlineLogo}
+                            onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+                          />
+                        ) : (
+                          <span
+                            className={styles.airlineLogoFallback}
+                            style={{ backgroundColor: item.color }}
+                          >
+                            {item.airline.charAt(0)}
+                          </span>
+                        )}
                         <div>
                           <div className={styles.detailCompany}>
-                            {item.companhia}{' '}
-                            <span className={styles.detailCategory}>
-                              ({item.categoria})
-                            </span>
+                            {item.airline}{' '}
+                            <span className={styles.detailCategory}>({item.category})</span>
                           </div>
-                          <div className={styles.detailAirport}>Aeroporto</div>
+                          <div className={styles.detailAirport}>{item.airport}</div>
                         </div>
                       </div>
-
-                      <div className={styles.detailPrice}>{item.preco}</div>
+                      <div className={styles.detailPrice}>{formatPrice(item.price, item.currency)}</div>
                     </div>
 
                     <div className={styles.detailBody}>
                       <div className={styles.detailTimes}>
-                        <span>Partida (ida): {item.saida}</span>
+                        <span>Partida (ida): {item.departure_date}</span>
                         <span>Chegada (ida): —</span>
-                        <span>Partida (volta): {item.volta}</span>
+                        <span>Partida (volta): {item.return_date}</span>
                         <span>Chegada (volta): —</span>
                       </div>
-
                       <div className={styles.detailConnections}>
-                        <span>Conexão 1</span>
-                        <span>Conexão 2</span>
-                        <span>Conexão 3</span>
-                        <span>...</span>
+                        {(item.connections ?? []).slice(0, 3).map(c => (
+                          <span key={c.id}>{c.title}</span>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -427,9 +578,12 @@ export default function PassagensView() {
       </Container>
 
       {modalPassagem && (
-        <ModalPassagem
-          passagem={modalPassagem}
-          onClose={() => setModalPassagem(null)}
+        <ModalPassagem flight={modalPassagem} onClose={() => setModalPassagem(null)} />
+      )}
+      {modalAdicionar && (
+        <ModalAdicionarVoo
+          onClose={() => setModalAdicionar(false)}
+          onSaved={refreshFlights}
         />
       )}
     </div>

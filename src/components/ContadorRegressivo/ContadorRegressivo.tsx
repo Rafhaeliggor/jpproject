@@ -56,12 +56,11 @@ export default function ContadorRegressivo({
   return (
     <div
       className={[styles.contador, className].filter(Boolean).join(' ')}
-      aria-label={`${days} dias, ${hours} horas e ${minutes} minutos restantes`}
+      aria-label={`${days} dias, ${hours} horas e ${minutes} minutos para a viagem`}
       role="timer"
     >
       <span className={styles.text}>
-        {days}日{String(hours).padStart(2, '0')}時
-        {String(minutes).padStart(2, '0')}分
+        {days}日&nbsp;{String(hours).padStart(2, '0')}時{String(minutes).padStart(2, '0')}分
       </span>
     </div>
   )

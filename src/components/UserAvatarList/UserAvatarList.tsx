@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import type { Usuario } from '@/data/usuarios'
 import styles from './UserAvatarList.module.css'
 
@@ -32,13 +31,7 @@ export default function UserAvatarList({
           }}
           title={u.nome}
         >
-          <Image
-            src={u.avatarUrl}
-            alt={u.nome}
-            width={size}
-            height={size}
-            className={styles.avatarImg}
-          />
+          {u.nome.charAt(0).toUpperCase()}
         </div>
       ))}
 

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Noto_Sans_JP, Open_Sans, Lexend, Source_Sans_3 } from 'next/font/google'
 import VLibrasWidget from '@/components/VLibrasWidget/VLibrasWidget'
 import KeyboardNavManager from '@/components/KeyboardNavManager/KeyboardNavManager'
+import { AuthProvider } from '@/contexts/AuthContext'
 import './globals.css'
 
 const inter = Inter({
@@ -60,7 +61,9 @@ export default function RootLayout({
         />
       </head>
       <body>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
         <VLibrasWidget />
         <KeyboardNavManager />
       </body>

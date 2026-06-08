@@ -22,8 +22,81 @@
   top: calc(45px + var(--space-8));
 }
 
+.topBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topBar .searchWrap {
+  flex: 1;
+  margin-bottom: 0;
+}
+
 .searchWrap {
   margin-bottom: 4px;
+}
+
+.addBtn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 6px;
+  color: rgba(180, 185, 255, 0.9);
+  font-size: 0.875rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.addBtn:hover {
+  background: rgba(99, 102, 241, 0.24);
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-16) var(--space-4);
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.emptyState i {
+  font-size: 2.5rem;
+  opacity: 0.4;
+}
+
+.emptyState p {
+  font-size: var(--text-body);
+  margin: 0;
+}
+
+.emptyBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 6px;
+  color: rgba(180, 185, 255, 0.9);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-top: var(--space-2);
+}
+
+.emptyBtn:hover {
+  background: rgba(99, 102, 241, 0.24);
+  border-color: rgba(99, 102, 241, 0.5);
 }
 
 .leftList {
@@ -33,10 +106,39 @@
   padding-right: 4px;
 }
 
+.flightRowWrap {
+  position: relative;
+}
+
+.deleteBtn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  padding: 4px 7px;
+  background: rgba(185, 50, 50, 0.1);
+  border: 1px solid rgba(185, 50, 50, 0.2);
+  border-radius: 4px;
+  color: rgba(220, 80, 80, 0.7);
+  font-size: 0.75rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+  z-index: 2;
+}
+
+.flightRowWrap:hover .deleteBtn {
+  opacity: 1;
+}
+
+.deleteBtn:hover {
+  background: rgba(185, 50, 50, 0.25);
+  color: rgba(240, 100, 100, 0.95);
+}
+
 .flightRow {
   width: 100%;
   display: grid;
-  grid-template-columns: 58px 1fr 72px;
+  grid-template-columns: 1fr 72px;
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
@@ -474,7 +576,7 @@
 
 @media (max-width: 860px) {
   .flightRow {
-    grid-template-columns: 58px 1fr;
+    grid-template-columns: 1fr;
   }
 
   .priceSmall {
@@ -524,5 +626,232 @@
     gap: 10px;
     flex-wrap: wrap;
     justify-content: center;
+  }
+}
+
+/* ─── Logo fallback ───────────────────────────────────────────────────── */
+.airlineLogoFallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* ─── Modal adicionar ─────────────────────────────────────────────────── */
+.modalAddTitle {
+  margin: 0 0 18px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #e6e9ee;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: 68vh;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.formField > span {
+  font-size: 0.78rem;
+  color: rgba(220, 226, 235, 0.6);
+}
+
+.formField input,
+.formField select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 5px;
+  padding: 7px 10px;
+  color: #d8dce2;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.formField input:focus,
+.formField select:focus {
+  border-color: rgba(99, 102, 241, 0.55);
+}
+
+.formField select option {
+  background: #0a1a30;
+}
+
+.formFieldFull {
+  grid-column: 1 / -1;
+}
+
+.colorInput {
+  height: 36px;
+  padding: 2px 4px !important;
+  cursor: pointer;
+}
+
+.optional {
+  color: rgba(220, 226, 235, 0.32);
+  font-size: 0.72rem;
+}
+
+.formError {
+  margin: 0;
+  padding: 8px 12px;
+  background: rgba(185, 50, 50, 0.14);
+  border: 1px solid rgba(185, 50, 50, 0.28);
+  border-radius: 5px;
+  color: rgba(240, 120, 120, 0.95);
+  font-size: 0.83rem;
+}
+
+/* Connections */
+.connSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.connSectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: rgba(220, 226, 235, 0.6);
+  font-size: 0.78rem;
+}
+
+.addConnBtn {
+  background: none;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 4px;
+  color: rgba(180, 185, 255, 0.8);
+  font-size: 0.78rem;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.addConnBtn:hover {
+  background: rgba(99, 102, 241, 0.15);
+}
+
+.connRow {
+  display: grid;
+  grid-template-columns: 110px 1fr 80px 80px 28px;
+  gap: 8px;
+  align-items: center;
+}
+
+.connInput {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 6px 8px;
+  color: #d8dce2;
+  font-size: 0.78rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+  min-width: 0;
+}
+
+.connInput:focus {
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.removeConnBtn {
+  background: none;
+  border: none;
+  color: rgba(220, 80, 80, 0.65);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.removeConnBtn:hover {
+  color: rgba(240, 100, 100, 1);
+}
+
+/* Form actions */
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.cancelBtn {
+  padding: 8px 18px;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 5px;
+  color: rgba(220, 226, 235, 0.7);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.cancelBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.submitBtn {
+  padding: 8px 20px;
+  background: rgba(99, 102, 241, 0.18);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  border-radius: 5px;
+  color: rgba(180, 185, 255, 0.95);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: rgba(99, 102, 241, 0.32);
+}
+
+.submitBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .connRow {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .connInputWide {
+    grid-column: 1 / -1;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .formFieldFull {
+    grid-column: 1;
   }
 }

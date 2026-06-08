@@ -1,4 +1,7 @@
+'use client'
+
 import Image from 'next/image'
+import { useState } from 'react'
 import styles from './MiniCard.module.css'
 
 export interface MiniCardProps {
@@ -9,6 +12,8 @@ export interface MiniCardProps {
 }
 
 export default function MiniCard({ nome, endereco, imagemUrl, onClick }: MiniCardProps) {
+  const [imgError, setImgError] = useState(false)
+
   return (
     <button
       type="button"
@@ -21,7 +26,7 @@ export default function MiniCard({ nome, endereco, imagemUrl, onClick }: MiniCar
         <span className={styles.endereco}>{endereco}</span>
       </div>
 
-      {imagemUrl && (
+      {imagemUrl && !imgError && (
         <div className={styles.imageWrapper}>
           <Image
             src={imagemUrl}
@@ -29,6 +34,7 @@ export default function MiniCard({ nome, endereco, imagemUrl, onClick }: MiniCar
             fill
             className={styles.image}
             sizes="(max-width: 640px) 90vw, 280px"
+            onError={() => setImgError(true)}
           />
         </div>
       )}

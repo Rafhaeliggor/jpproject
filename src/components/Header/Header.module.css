@@ -84,6 +84,25 @@
   flex-shrink: 0;
 }
 
+.dropdownSeparator {
+  height: 1px;
+  background: rgba(160, 173, 189, 0.1);
+  margin: 2px 0;
+}
+
+.dropdownItemDanger {
+  color: rgba(248, 113, 113, 0.85);
+}
+
+.dropdownItemDanger:hover {
+  background: rgba(239, 68, 68, 0.08);
+  color: rgba(248, 113, 113, 1);
+}
+
+.dropdownItemDanger i {
+  opacity: 1;
+}
+
 @media (max-width: 1024px) {
   .inner {
     padding: 0 var(--margin-tablet);

@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import type { Usuario } from '@/data/usuarios'
 import styles from './UserRankingItem.module.css'
 
@@ -22,13 +21,7 @@ export default function UserRankingItem({ usuario }: UserRankingItemProps) {
         style={{ backgroundColor: usuario.cor }}
         title={usuario.nome}
       >
-        <Image
-          src={usuario.avatarUrl}
-          alt={usuario.nome}
-          width={36}
-          height={36}
-          className={styles.avatarImg}
-        />
+        {usuario.nome.charAt(0).toUpperCase()}
       </div>
     </div>
   )
